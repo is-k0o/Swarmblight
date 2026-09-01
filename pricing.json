@@ -1,0 +1,9 @@
+{
+  "_comment": "USD per one million tokens; verified for exact configured model.",
+  "models": {
+    "gpt-5-mini": {
+      "input_usd_per_million_tokens": 0.25,
+      "output_usd_per_million_tokens": 2.0
+    }
+  }
+}

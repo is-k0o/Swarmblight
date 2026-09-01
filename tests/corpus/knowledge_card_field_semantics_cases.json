@@ -1,0 +1,327 @@
+[
+  {
+    "id": "source_factual_pass_php_encoder",
+    "semantic_class": "SOURCE_FACTUAL",
+    "source": "For PHP HTML contexts, use htmlentities with ENT_QUOTES.",
+    "field": "principle",
+    "value": "In PHP HTML contexts, htmlentities with ENT_QUOTES should be used.",
+    "expected": "pass",
+    "rationale": "Faithful abstraction that preserves the source's normative modality, named language, context, and encoder."
+  },
+  {
+    "id": "source_factual_pass_stored_later",
+    "semantic_class": "SOURCE_FACTUAL",
+    "source": "Stored data appears in later responses.",
+    "field": "demonstrated_behavior",
+    "value": "Stored data appears later in responses.",
+    "expected": "pass",
+    "rationale": "No stronger persistence or transformation claim is added."
+  },
+  {
+    "id": "source_factual_pass_xss_users",
+    "semantic_class": "SOURCE_FACTUAL",
+    "source": "XSS is client-side and targets other application users.",
+    "field": "principle",
+    "value": "XSS is a client-side issue directed at other application users.",
+    "expected": "pass",
+    "rationale": "Semantically equivalent high-level statement."
+  },
+  {
+    "id": "source_factual_fail_sqli_queries",
+    "semantic_class": "SOURCE_FACTUAL",
+    "source": "SQL injection targets the database.",
+    "field": "principle",
+    "value": "Crafted input alters SQL queries.",
+    "expected": "fail",
+    "rationale": "Adds a query-alteration mechanism absent from the source."
+  },
+  {
+    "id": "source_factual_fail_encoder_availability",
+    "semantic_class": "SOURCE_FACTUAL",
+    "source": "Use htmlentities in PHP and Google Guava HTML encoding in Java.",
+    "field": "technique_assumptions",
+    "value": "These encoder functions are always available.",
+    "expected": "fail",
+    "rationale": "Introduces an unstated availability guarantee."
+  },
+  {
+    "id": "source_factual_fail_browser_precondition",
+    "semantic_class": "SOURCE_FACTUAL",
+    "source": "Use JavaScript Unicode escapes for JavaScript contexts.",
+    "field": "prerequisites",
+    "value": "The target browser must implement a specific sanitizer API.",
+    "expected": "fail",
+    "rationale": "Adds an unrelated implementation precondition."
+  },
+  {
+    "id": "derived-php-faithful",
+    "semantic_class": "DERIVED_OPERATIONAL",
+    "source_modality": "normative",
+    "source": "Escape your outputs with htmlentities and ENT_QUOTES for HTML contexts.",
+    "field": "evidence_required",
+    "value": "Confirm the relevant HTML output path uses htmlentities with ENT_QUOTES.",
+    "expected": "pass",
+    "derived_boundary": "operational_wrapper",
+    "rationale": "The compliance check preserves the source prescription without asserting that the implementation already conforms."
+  },
+  {
+    "id": "derived_pass_persistence_question",
+    "semantic_class": "DERIVED_OPERATIONAL",
+    "source": "Stored data appears in later responses.",
+    "field": "questions_to_ask",
+    "value": "Does attacker-controlled data persist into a later response?",
+    "expected": "pass",
+    "derived_boundary": "operational_wrapper",
+    "rationale": "Operational inversion of the supported persistence claim."
+  },
+  {
+    "id": "derived_pass_stored_trigger",
+    "semantic_class": "DERIVED_OPERATIONAL",
+    "source": "Stored data appears in later responses.",
+    "field": "triggers",
+    "value": "stored input reappears later",
+    "expected": "pass",
+    "derived_boundary": "operational_wrapper",
+    "rationale": "Concise recognition cue for the supported behavior."
+  },
+  {
+    "id": "derived-sqli-faithful",
+    "semantic_class": "DERIVED_OPERATIONAL",
+    "source_modality": "descriptive",
+    "source": "SQL injection is a server-side vulnerability that targets the application's database.",
+    "field": "evidence_required",
+    "value": "Confirm that SQL injection targets the application's database.",
+    "expected": "pass",
+    "derived_boundary": "operational_wrapper",
+    "rationale": "Only the confirmation framing is added; the factual proposition that SQL injection targets the application's database is preserved unchanged."
+  },
+  {
+    "id": "derived-csrf-faithful",
+    "semantic_class": "DERIVED_OPERATIONAL",
+    "source": "CSRF involves inducing a victim user to perform actions they do not intend to do.",
+    "field": "questions_to_ask",
+    "value": "Determine whether the victim was induced to perform an unintended action.",
+    "expected": "pass",
+    "derived_boundary": "operational_wrapper",
+    "rationale": "The question form preserves the supported victim-action proposition."
+  },
+  {
+    "id": "derived-php-csp",
+    "semantic_class": "DERIVED_OPERATIONAL",
+    "source_modality": "normative",
+    "source": "Escape your outputs with htmlentities and ENT_QUOTES for HTML contexts.",
+    "field": "evidence_required",
+    "value": "Confirm CSP blocks JavaScript execution.",
+    "expected": "fail",
+    "derived_boundary": "factual_payload",
+    "rationale": "Introduces an unrelated CSP mechanism."
+  },
+  {
+    "id": "derived-php-availability-guarantee",
+    "semantic_class": "DERIVED_OPERATIONAL",
+    "source_modality": "normative",
+    "source": "Escape your outputs with htmlentities and ENT_QUOTES for HTML contexts.",
+    "field": "evidence_required",
+    "value": "Confirm htmlentities is always available.",
+    "expected": "fail",
+    "derived_boundary": "factual_payload",
+    "rationale": "Adds an availability guarantee that is absent from the source prescription."
+  },
+  {
+    "id": "derived-php-safety-guarantee",
+    "semantic_class": "DERIVED_OPERATIONAL",
+    "source_modality": "normative",
+    "source": "Escape your outputs with htmlentities and ENT_QUOTES for HTML contexts.",
+    "field": "evidence_required",
+    "value": "Confirm every application output is already safely encoded.",
+    "expected": "fail",
+    "derived_boundary": "factual_payload",
+    "rationale": "Adds universal scope, current implementation state, and a safety guarantee absent from the prescription."
+  },
+  {
+    "id": "derived-prohibition-compliance",
+    "semantic_class": "DERIVED_OPERATIONAL",
+    "source_modality": "normative",
+    "source": "Do not insert untrusted data into executable JavaScript contexts.",
+    "field": "questions_to_ask",
+    "value": "Check whether untrusted data is inserted into executable JavaScript contexts.",
+    "expected": "pass",
+    "derived_boundary": "operational_wrapper",
+    "rationale": "The check tests compliance with the prohibition without asserting that prohibited insertion currently occurs."
+  },
+  {
+    "id": "derived_fail_httponly_question",
+    "semantic_class": "DERIVED_OPERATIONAL",
+    "source": "Stored data appears in later responses.",
+    "field": "questions_to_ask",
+    "value": "Can the stored value steal HttpOnly cookies?",
+    "expected": "fail",
+    "derived_boundary": "factual_payload",
+    "rationale": "Adds cookie theft and HttpOnly behavior absent from the source."
+  },
+  {
+    "id": "derived_fail_verbatim_proof",
+    "semantic_class": "DERIVED_OPERATIONAL",
+    "source": "Stored data appears in later responses.",
+    "field": "evidence_required",
+    "value": "Prove the exact same bytes return verbatim without encoding.",
+    "expected": "fail",
+    "derived_boundary": "factual_payload",
+    "rationale": "Demands exact preservation and no encoding, both stronger than the claim."
+  },
+  {
+    "id": "derived-sqli-mechanism",
+    "semantic_class": "DERIVED_OPERATIONAL",
+    "source_modality": "descriptive",
+    "source": "SQL injection is a server-side vulnerability that targets the application's database.",
+    "field": "evidence_required",
+    "value": "Confirm crafted input alters SQL queries.",
+    "expected": "fail",
+    "derived_boundary": "factual_payload",
+    "rationale": "Removing the confirm wrapper reveals an unsupported query-alteration mechanism."
+  },
+  {
+    "id": "derived-csrf-mechanism",
+    "semantic_class": "DERIVED_OPERATIONAL",
+    "source": "CSRF involves inducing a victim user to perform actions they do not intend to do.",
+    "field": "evidence_required",
+    "value": "Confirm an authenticated victim action was caused by an induced request.",
+    "expected": "fail",
+    "derived_boundary": "factual_payload",
+    "rationale": "Adds authenticated state, a request mechanism, and stronger causality."
+  },
+  {
+    "id": "derived-stored-xss-later-response-faithful",
+    "semantic_class": "DERIVED_OPERATIONAL",
+    "source_modality": "descriptive",
+    "source": "Stored XSS (also known as persistent or second-order XSS) arises when an application receives data from an untrusted source and includes that data within its later HTTP responses in an unsafe way.\n\nThe data in question might be submitted to the application via HTTP requests; for example, comments on a blog post, user nicknames in a chat room, or contact details on a customer order. In other cases, the data might arrive from other untrusted sources; for example, a webmail application displaying messages received over SMTP, a marketing application displaying social media posts, or a network monitoring application displaying packet data from network traffic.\n\nHere is a simple example of a stored XSS vulnerability. A message board application lets users submit messages, which are displayed to other users:\n\n<p>Hello, this is my message!</p>\n\nThe application doesn't perform any other processing of the data, so an attacker can easily send a message that attacks other users:\n\n<p><script>/* Bad stuff here... */</script></p>",
+    "field": "questions_to_ask",
+    "value": "Which later HTTP responses include the persisted data?",
+    "expected": "pass",
+    "derived_boundary": "operational_wrapper",
+    "rationale": "Operationalizes the source-supported fact that untrusted data is included within later HTTP responses, without adding an identity, transformation, transport, actor-state, or proof requirement."
+  },
+  {
+    "id": "derived-stored-xss-verbatim",
+    "semantic_class": "DERIVED_OPERATIONAL",
+    "source_modality": "descriptive",
+    "source": "Stored XSS (also known as persistent or second-order XSS) arises when an application receives data from an untrusted source and includes that data within its later HTTP responses in an unsafe way.\n\nThe data in question might be submitted to the application via HTTP requests; for example, comments on a blog post, user nicknames in a chat room, or contact details on a customer order. In other cases, the data might arrive from other untrusted sources; for example, a webmail application displaying messages received over SMTP, a marketing application displaying social media posts, or a network monitoring application displaying packet data from network traffic.\n\nHere is a simple example of a stored XSS vulnerability. A message board application lets users submit messages, which are displayed to other users:\n\n<p>Hello, this is my message!</p>\n\nThe application doesn't perform any other processing of the data, so an attacker can easily send a message that attacks other users:\n\n<p><script>/* Bad stuff here... */</script></p>",
+    "field": "questions_to_ask",
+    "value": "Is the persisted data included verbatim in later HTTP responses?",
+    "expected": "fail",
+    "derived_boundary": "factual_payload",
+    "rationale": "Adds a general verbatim-identity requirement. The source establishes unsafe later inclusion, but does not establish that stored data must generally be included verbatim. The simple message-board example stating that no other processing occurs must not be generalized into a universal property of Stored XSS."
+  },
+  {
+    "id": "derived-stored-xss-unsafe-inclusion-faithful",
+    "semantic_class": "DERIVED_OPERATIONAL",
+    "source_modality": "descriptive",
+    "source": "Stored XSS (also known as persistent or second-order XSS) arises when an application receives data from an untrusted source and includes that data within its later HTTP responses in an unsafe way.\n\nThe data in question might be submitted to the application via HTTP requests; for example, comments on a blog post, user nicknames in a chat room, or contact details on a customer order. In other cases, the data might arrive from other untrusted sources; for example, a webmail application displaying messages received over SMTP, a marketing application displaying social media posts, or a network monitoring application displaying packet data from network traffic.\n\nHere is a simple example of a stored XSS vulnerability. A message board application lets users submit messages, which are displayed to other users:\n\n<p>Hello, this is my message!</p>\n\nThe application doesn't perform any other processing of the data, so an attacker can easily send a message that attacks other users:\n\n<p><script>/* Bad stuff here... */</script></p>",
+    "field": "evidence_required",
+    "value": "Confirm that data received from an untrusted source is later included in an HTTP response in an unsafe way.",
+    "expected": "pass",
+    "derived_boundary": "operational_wrapper",
+    "rationale": "Turns the source-supported Stored XSS behavior into a compliance/evidence check without adding a stronger mechanism, identity condition, transformation condition, or proof workflow."
+  },
+  {
+    "id": "derived-stored-xss-same-payload",
+    "semantic_class": "DERIVED_OPERATIONAL",
+    "source_modality": "descriptive",
+    "source": "Stored XSS (also known as persistent or second-order XSS) arises when an application receives data from an untrusted source and includes that data within its later HTTP responses in an unsafe way.\n\nThe data in question might be submitted to the application via HTTP requests; for example, comments on a blog post, user nicknames in a chat room, or contact details on a customer order. In other cases, the data might arrive from other untrusted sources; for example, a webmail application displaying messages received over SMTP, a marketing application displaying social media posts, or a network monitoring application displaying packet data from network traffic.\n\nHere is a simple example of a stored XSS vulnerability. A message board application lets users submit messages, which are displayed to other users:\n\n<p>Hello, this is my message!</p>\n\nThe application doesn't perform any other processing of the data, so an attacker can easily send a message that attacks other users:\n\n<p><script>/* Bad stuff here... */</script></p>",
+    "field": "evidence_required",
+    "value": "Submit a payload via an input path that the application persists, and show the same payload is later present in an HTTP response where a browser would parse it.",
+    "expected": "fail",
+    "derived_boundary": "factual_payload",
+    "rationale": "This is the historical strengthening from the false-approved card. It turns the source-supported requirement of unsafe later inclusion into a more specific proof workflow requiring payload identity (\"the same payload\") and a browser-parsing condition. Those stronger requirements are not established as general Stored XSS requirements by the source."
+  },
+  {
+    "id": "label_pass_taxonomy",
+    "semantic_class": "SEMANTIC_LABEL",
+    "source": "This section compares XSS, CSRF, and SQL injection.",
+    "field": "tags",
+    "value": "cross-vulnerability comparison",
+    "expected": "pass",
+    "rationale": "Faithful non-literal semantic label for content comparing multiple vulnerability classes."
+  },
+  {
+    "id": "label_pass_distinctions",
+    "semantic_class": "SEMANTIC_LABEL",
+    "source": "This section contrasts XSS with CSRF and SQL injection.",
+    "field": "subtopic",
+    "value": "distinctions",
+    "expected": "pass",
+    "rationale": "Semantically represents comparison content."
+  },
+  {
+    "id": "label_fail_oauth",
+    "semantic_class": "SEMANTIC_LABEL",
+    "source": "This section compares XSS, CSRF, and SQL injection.",
+    "field": "tags",
+    "value": "oauth",
+    "expected": "fail",
+    "rationale": "Implies an unrelated authentication concept."
+  },
+  {
+    "id": "label_fail_rce",
+    "semantic_class": "SEMANTIC_LABEL",
+    "source": "Use context-appropriate output encoding for XSS prevention.",
+    "field": "title",
+    "value": "Remote code execution prevention",
+    "expected": "fail",
+    "rationale": "Mislabels the source as a different vulnerability class."
+  },
+  {
+    "id": "routing_pass_sqli",
+    "semantic_class": "ROUTING_METADATA",
+    "source": "The source explicitly compares XSS with SQL injection.",
+    "field": "escalation_topics",
+    "value": ["sqli"],
+    "expected": "pass",
+    "rationale": "SQLi is a justified semantic adjacency even without approved SQLi cards."
+  },
+  {
+    "id": "routing_pass_dom",
+    "semantic_class": "ROUTING_METADATA",
+    "source": "The source distinguishes DOM-based XSS from reflected and stored XSS.",
+    "field": "escalation_topics",
+    "value": ["dom"],
+    "expected": "pass",
+    "rationale": "DOM is explicitly adjacent in the source meaning."
+  },
+  {
+    "id": "routing_fail_kerberos",
+    "semantic_class": "ROUTING_METADATA",
+    "source": "The source discusses SQL injection targeting the database.",
+    "field": "escalation_topics",
+    "value": ["dom"],
+    "expected": "fail",
+    "rationale": "The source establishes SQL injection behavior but no semantic adjacency to DOM-based XSS."
+  },
+  {
+    "id": "routing_fail_ssti",
+    "semantic_class": "ROUTING_METADATA",
+    "source": "The source discusses stored XSS persistence.",
+    "field": "escalation_topics",
+    "value": ["ssti"],
+    "expected": "fail",
+    "rationale": "No semantic adjacency is established."
+  },
+  {
+    "id": "metadata_confidence_excluded",
+    "semantic_class": "FORGE_METADATA",
+    "source": "The source does not state a numeric confidence.",
+    "field": "confidence",
+    "value": 0.7,
+    "expected": "excluded",
+    "rationale": "Confidence is owned by the Forge rather than the source."
+  },
+  {
+    "id": "speculation_isolated_excluded",
+    "semantic_class": "EXPLICIT_EXTRAPOLATION",
+    "source": "The source states one bounded behavior.",
+    "field": "speculative_extensions",
+    "value": "A clearly marked possible follow-on hypothesis.",
+    "expected": "excluded",
+    "rationale": "Bounded extrapolation is allowed only while isolated in this field."
+  }
+]

@@ -1,0 +1,32 @@
+[
+  {
+    "card_id": "4d6a500e-5a57-51bb-b423-20b52e77a95c",
+    "chunk_id": "8661ddb6-71ea-5514-a5be-0c9b5867f94d",
+    "expected": "fail",
+    "rationale": "The card imports authenticated-request and altered-query mechanisms absent from the chunk."
+  },
+  {
+    "card_id": "7b1a66e5-1437-5820-8785-c981ca438fa1",
+    "chunk_id": "047fddc1-3a4b-5e58-b7ae-29675ed9b066",
+    "expected": "fail",
+    "rationale": "The card generalizes one no-processing example into exact/verbatim payload requirements."
+  },
+  {
+    "card_id": "c5bcfb72-3485-50ea-918a-e4874e34223e",
+    "chunk_id": "a8737a34-f086-5dfe-be44-bb5a65cb6e26",
+    "expected": "fail",
+    "rationale": "The card adds reflection, application-output, page-loading, sameness, and reproducibility constraints."
+  },
+  {
+    "card_id": "0117510c-6487-5415-90ba-783a4beda714",
+    "chunk_id": "c59b4e78-5658-5126-91ba-edbc3dd4ea6b",
+    "expected": "fail",
+    "rationale": "The card expands a three-line taxonomy into transport and processing mechanisms."
+  },
+  {
+    "card_id": "088622c1-99fc-5372-bfb8-521162a51c8e",
+    "chunk_id": "8661ddb6-71ea-5514-a5be-0c9b5867f94d",
+    "expected": "pass",
+    "rationale": "The PHP and Java prevention details are explicitly supported by the chunk."
+  }
+]

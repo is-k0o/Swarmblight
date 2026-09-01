@@ -1,0 +1,6 @@
+discord.py>=2.4,<3
+openai>=1.68,<3
+pydantic>=2.10,<3
+pydantic-settings>=2.7,<3
+pytest>=8.3,<10
+pytest-asyncio>=0.25,<2
