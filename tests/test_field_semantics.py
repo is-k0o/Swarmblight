@@ -25,12 +25,12 @@ def test_manual_semantics_matrix_has_required_class_balance() -> None:
         (str(case["semantic_class"]), str(case["expected"])) for case in measured
     )
 
-    assert len(measured) == 36
+    assert len(measured) == 39
     assert counts == {
         ("SOURCE_FACTUAL", "pass"): 3,
         ("SOURCE_FACTUAL", "fail"): 3,
-        ("DERIVED_OPERATIONAL", "pass"): 10,
-        ("DERIVED_OPERATIONAL", "fail"): 12,
+        ("DERIVED_OPERATIONAL", "pass"): 11,
+        ("DERIVED_OPERATIONAL", "fail"): 14,
         ("SEMANTIC_LABEL", "pass"): 2,
         ("SEMANTIC_LABEL", "fail"): 2,
         ("ROUTING_METADATA", "pass"): 2,
@@ -60,6 +60,9 @@ def test_semantics_fixture_covers_requested_boundary_examples() -> None:
         "derived-stored-xss-browser-html-context": "fail",
         "derived-stored-xss-example-no-processing-scoped": "pass",
         "derived-stored-xss-no-processing-generalized": "fail",
+        "derived-stored-xss-html-example-scoped": "pass",
+        "derived-stored-xss-browser-inference-example-scoped": "fail",
+        "derived-stored-xss-html-generalized": "fail",
         "derived_pass_persistence_question": "pass",
         "derived_fail_httponly_question": "fail",
         "label_pass_taxonomy": "pass",
@@ -144,6 +147,9 @@ def test_stored_xss_counterexamples_share_one_exact_source_and_atomic_boundaries
         "derived-stored-xss-browser-html-context",
         "derived-stored-xss-example-no-processing-scoped",
         "derived-stored-xss-no-processing-generalized",
+        "derived-stored-xss-html-example-scoped",
+        "derived-stored-xss-browser-inference-example-scoped",
+        "derived-stored-xss-html-generalized",
     )
     source = str(cases[case_ids[0]]["source"])
 
@@ -210,6 +216,24 @@ def test_stored_xss_counterexamples_share_one_exact_source_and_atomic_boundaries
         "derived-stored-xss-no-processing-generalized": (
             "evidence_required",
             "Confirm that Stored XSS data is always included in later HTTP responses without any other processing.",
+            "fail",
+            "factual_payload",
+        ),
+        "derived-stored-xss-html-example-scoped": (
+            "questions_to_ask",
+            "In the simple message-board example, is the submitted message included in the HTML displayed to other users?",
+            "pass",
+            "operational_wrapper",
+        ),
+        "derived-stored-xss-browser-inference-example-scoped": (
+            "evidence_required",
+            "In the simple message-board example, confirm that a browser parses the submitted message as HTML.",
+            "fail",
+            "factual_payload",
+        ),
+        "derived-stored-xss-html-generalized": (
+            "evidence_required",
+            "Confirm that every Stored XSS vulnerability requires persisted data to be included in an HTML context in a later HTTP response.",
             "fail",
             "factual_payload",
         ),

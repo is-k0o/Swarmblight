@@ -290,6 +290,39 @@
     "rationale": "Generalizes the simple message-board example's no-other-processing property into a universal Stored XSS requirement and adds universal scope that the source does not establish."
   },
   {
+    "id": "derived-stored-xss-html-example-scoped",
+    "semantic_class": "DERIVED_OPERATIONAL",
+    "source_modality": "descriptive",
+    "source": "Stored XSS (also known as persistent or second-order XSS) arises when an application receives data from an untrusted source and includes that data within its later HTTP responses in an unsafe way.\n\nThe data in question might be submitted to the application via HTTP requests; for example, comments on a blog post, user nicknames in a chat room, or contact details on a customer order. In other cases, the data might arrive from other untrusted sources; for example, a webmail application displaying messages received over SMTP, a marketing application displaying social media posts, or a network monitoring application displaying packet data from network traffic.\n\nHere is a simple example of a stored XSS vulnerability. A message board application lets users submit messages, which are displayed to other users:\n\n<p>Hello, this is my message!</p>\n\nThe application doesn't perform any other processing of the data, so an attacker can easily send a message that attacks other users:\n\n<p><script>/* Bad stuff here... */</script></p>",
+    "field": "questions_to_ask",
+    "value": "In the simple message-board example, is the submitted message included in the HTML displayed to other users?",
+    "expected": "pass",
+    "derived_boundary": "operational_wrapper",
+    "rationale": "Preserves the explicit scope of the source's simple message-board example, whose submitted messages are shown as HTML markup and displayed to other users."
+  },
+  {
+    "id": "derived-stored-xss-browser-inference-example-scoped",
+    "semantic_class": "DERIVED_OPERATIONAL",
+    "source_modality": "descriptive",
+    "source": "Stored XSS (also known as persistent or second-order XSS) arises when an application receives data from an untrusted source and includes that data within its later HTTP responses in an unsafe way.\n\nThe data in question might be submitted to the application via HTTP requests; for example, comments on a blog post, user nicknames in a chat room, or contact details on a customer order. In other cases, the data might arrive from other untrusted sources; for example, a webmail application displaying messages received over SMTP, a marketing application displaying social media posts, or a network monitoring application displaying packet data from network traffic.\n\nHere is a simple example of a stored XSS vulnerability. A message board application lets users submit messages, which are displayed to other users:\n\n<p>Hello, this is my message!</p>\n\nThe application doesn't perform any other processing of the data, so an attacker can easily send a message that attacks other users:\n\n<p><script>/* Bad stuff here... */</script></p>",
+    "field": "evidence_required",
+    "value": "In the simple message-board example, confirm that a browser parses the submitted message as HTML.",
+    "expected": "fail",
+    "derived_boundary": "factual_payload",
+    "rationale": "Although scoped to the source example, this adds the browser-parsing mechanism explicitly. The source shows HTML markup and says messages are displayed to users, but does not itself state that a browser parses the submitted message as HTML."
+  },
+  {
+    "id": "derived-stored-xss-html-generalized",
+    "semantic_class": "DERIVED_OPERATIONAL",
+    "source_modality": "descriptive",
+    "source": "Stored XSS (also known as persistent or second-order XSS) arises when an application receives data from an untrusted source and includes that data within its later HTTP responses in an unsafe way.\n\nThe data in question might be submitted to the application via HTTP requests; for example, comments on a blog post, user nicknames in a chat room, or contact details on a customer order. In other cases, the data might arrive from other untrusted sources; for example, a webmail application displaying messages received over SMTP, a marketing application displaying social media posts, or a network monitoring application displaying packet data from network traffic.\n\nHere is a simple example of a stored XSS vulnerability. A message board application lets users submit messages, which are displayed to other users:\n\n<p>Hello, this is my message!</p>\n\nThe application doesn't perform any other processing of the data, so an attacker can easily send a message that attacks other users:\n\n<p><script>/* Bad stuff here... */</script></p>",
+    "field": "evidence_required",
+    "value": "Confirm that every Stored XSS vulnerability requires persisted data to be included in an HTML context in a later HTTP response.",
+    "expected": "fail",
+    "derived_boundary": "factual_payload",
+    "rationale": "Introduces universal scope and makes an HTML-context requirement a general Stored XSS invariant, while the source's HTML context belongs only to its concrete message-board example."
+  },
+  {
     "id": "label_pass_taxonomy",
     "semantic_class": "SEMANTIC_LABEL",
     "source": "This section compares XSS, CSRF, and SQL injection.",
