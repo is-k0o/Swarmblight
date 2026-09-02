@@ -25,12 +25,12 @@ def test_manual_semantics_matrix_has_required_class_balance() -> None:
         (str(case["semantic_class"]), str(case["expected"])) for case in measured
     )
 
-    assert len(measured) == 31
+    assert len(measured) == 36
     assert counts == {
         ("SOURCE_FACTUAL", "pass"): 3,
         ("SOURCE_FACTUAL", "fail"): 3,
-        ("DERIVED_OPERATIONAL", "pass"): 8,
-        ("DERIVED_OPERATIONAL", "fail"): 9,
+        ("DERIVED_OPERATIONAL", "pass"): 10,
+        ("DERIVED_OPERATIONAL", "fail"): 12,
         ("SEMANTIC_LABEL", "pass"): 2,
         ("SEMANTIC_LABEL", "fail"): 2,
         ("ROUTING_METADATA", "pass"): 2,
@@ -55,6 +55,11 @@ def test_semantics_fixture_covers_requested_boundary_examples() -> None:
         "derived-stored-xss-verbatim": "fail",
         "derived-stored-xss-unsafe-inclusion-faithful": "pass",
         "derived-stored-xss-same-payload": "fail",
+        "derived-stored-xss-workflow-faithful": "pass",
+        "derived-stored-xss-exact-bytes": "fail",
+        "derived-stored-xss-browser-html-context": "fail",
+        "derived-stored-xss-example-no-processing-scoped": "pass",
+        "derived-stored-xss-no-processing-generalized": "fail",
         "derived_pass_persistence_question": "pass",
         "derived_fail_httponly_question": "fail",
         "label_pass_taxonomy": "pass",
@@ -134,6 +139,11 @@ def test_stored_xss_counterexamples_share_one_exact_source_and_atomic_boundaries
         "derived-stored-xss-verbatim",
         "derived-stored-xss-unsafe-inclusion-faithful",
         "derived-stored-xss-same-payload",
+        "derived-stored-xss-workflow-faithful",
+        "derived-stored-xss-exact-bytes",
+        "derived-stored-xss-browser-html-context",
+        "derived-stored-xss-example-no-processing-scoped",
+        "derived-stored-xss-no-processing-generalized",
     )
     source = str(cases[case_ids[0]]["source"])
 
@@ -170,6 +180,36 @@ def test_stored_xss_counterexamples_share_one_exact_source_and_atomic_boundaries
         "derived-stored-xss-same-payload": (
             "evidence_required",
             "Submit a payload via an input path that the application persists, and show the same payload is later present in an HTTP response where a browser would parse it.",
+            "fail",
+            "factual_payload",
+        ),
+        "derived-stored-xss-workflow-faithful": (
+            "evidence_required",
+            "First identify data received from an untrusted source, then inspect a later HTTP response to determine whether that data is included in an unsafe way.",
+            "pass",
+            "operational_wrapper",
+        ),
+        "derived-stored-xss-exact-bytes": (
+            "evidence_required",
+            "Confirm that the exact byte-for-byte value received from the untrusted source is reproduced unchanged in a later HTTP response.",
+            "fail",
+            "factual_payload",
+        ),
+        "derived-stored-xss-browser-html-context": (
+            "evidence_required",
+            "Confirm that the browser parses the persisted data as HTML in the later response.",
+            "fail",
+            "factual_payload",
+        ),
+        "derived-stored-xss-example-no-processing-scoped": (
+            "questions_to_ask",
+            "In the simple message-board example, are submitted messages displayed without any other processing?",
+            "pass",
+            "operational_wrapper",
+        ),
+        "derived-stored-xss-no-processing-generalized": (
+            "evidence_required",
+            "Confirm that Stored XSS data is always included in later HTTP responses without any other processing.",
             "fail",
             "factual_payload",
         ),

@@ -235,6 +235,61 @@
     "rationale": "This is the historical strengthening from the false-approved card. It turns the source-supported requirement of unsafe later inclusion into a more specific proof workflow requiring payload identity (\"the same payload\") and a browser-parsing condition. Those stronger requirements are not established as general Stored XSS requirements by the source."
   },
   {
+    "id": "derived-stored-xss-workflow-faithful",
+    "semantic_class": "DERIVED_OPERATIONAL",
+    "source_modality": "descriptive",
+    "source": "Stored XSS (also known as persistent or second-order XSS) arises when an application receives data from an untrusted source and includes that data within its later HTTP responses in an unsafe way.\n\nThe data in question might be submitted to the application via HTTP requests; for example, comments on a blog post, user nicknames in a chat room, or contact details on a customer order. In other cases, the data might arrive from other untrusted sources; for example, a webmail application displaying messages received over SMTP, a marketing application displaying social media posts, or a network monitoring application displaying packet data from network traffic.\n\nHere is a simple example of a stored XSS vulnerability. A message board application lets users submit messages, which are displayed to other users:\n\n<p>Hello, this is my message!</p>\n\nThe application doesn't perform any other processing of the data, so an attacker can easily send a message that attacks other users:\n\n<p><script>/* Bad stuff here... */</script></p>",
+    "field": "evidence_required",
+    "value": "First identify data received from an untrusted source, then inspect a later HTTP response to determine whether that data is included in an unsafe way.",
+    "expected": "pass",
+    "derived_boundary": "operational_wrapper",
+    "rationale": "Adds only an observational sequence around the source-supported receive-to-later-unsafe-inclusion proposition. It introduces no stronger identity, transformation, parser, actor-state, or implementation claim."
+  },
+  {
+    "id": "derived-stored-xss-exact-bytes",
+    "semantic_class": "DERIVED_OPERATIONAL",
+    "source_modality": "descriptive",
+    "source": "Stored XSS (also known as persistent or second-order XSS) arises when an application receives data from an untrusted source and includes that data within its later HTTP responses in an unsafe way.\n\nThe data in question might be submitted to the application via HTTP requests; for example, comments on a blog post, user nicknames in a chat room, or contact details on a customer order. In other cases, the data might arrive from other untrusted sources; for example, a webmail application displaying messages received over SMTP, a marketing application displaying social media posts, or a network monitoring application displaying packet data from network traffic.\n\nHere is a simple example of a stored XSS vulnerability. A message board application lets users submit messages, which are displayed to other users:\n\n<p>Hello, this is my message!</p>\n\nThe application doesn't perform any other processing of the data, so an attacker can easily send a message that attacks other users:\n\n<p><script>/* Bad stuff here... */</script></p>",
+    "field": "evidence_required",
+    "value": "Confirm that the exact byte-for-byte value received from the untrusted source is reproduced unchanged in a later HTTP response.",
+    "expected": "fail",
+    "derived_boundary": "factual_payload",
+    "rationale": "Adds exact byte identity and unchanged reproduction as general requirements. The source supports later inclusion of that data in an unsafe way, but does not establish byte-for-byte preservation or absence of transformation as a general Stored XSS property."
+  },
+  {
+    "id": "derived-stored-xss-browser-html-context",
+    "semantic_class": "DERIVED_OPERATIONAL",
+    "source_modality": "descriptive",
+    "source": "Stored XSS (also known as persistent or second-order XSS) arises when an application receives data from an untrusted source and includes that data within its later HTTP responses in an unsafe way.\n\nThe data in question might be submitted to the application via HTTP requests; for example, comments on a blog post, user nicknames in a chat room, or contact details on a customer order. In other cases, the data might arrive from other untrusted sources; for example, a webmail application displaying messages received over SMTP, a marketing application displaying social media posts, or a network monitoring application displaying packet data from network traffic.\n\nHere is a simple example of a stored XSS vulnerability. A message board application lets users submit messages, which are displayed to other users:\n\n<p>Hello, this is my message!</p>\n\nThe application doesn't perform any other processing of the data, so an attacker can easily send a message that attacks other users:\n\n<p><script>/* Bad stuff here... */</script></p>",
+    "field": "evidence_required",
+    "value": "Confirm that the browser parses the persisted data as HTML in the later response.",
+    "expected": "fail",
+    "derived_boundary": "factual_payload",
+    "rationale": "Adds a specific browser HTML parsing context to the general Stored XSS proposition. The source's general definition requires unsafe later inclusion, while the simple HTML message-board example must not be generalized into a universal parser/context requirement."
+  },
+  {
+    "id": "derived-stored-xss-example-no-processing-scoped",
+    "semantic_class": "DERIVED_OPERATIONAL",
+    "source_modality": "descriptive",
+    "source": "Stored XSS (also known as persistent or second-order XSS) arises when an application receives data from an untrusted source and includes that data within its later HTTP responses in an unsafe way.\n\nThe data in question might be submitted to the application via HTTP requests; for example, comments on a blog post, user nicknames in a chat room, or contact details on a customer order. In other cases, the data might arrive from other untrusted sources; for example, a webmail application displaying messages received over SMTP, a marketing application displaying social media posts, or a network monitoring application displaying packet data from network traffic.\n\nHere is a simple example of a stored XSS vulnerability. A message board application lets users submit messages, which are displayed to other users:\n\n<p>Hello, this is my message!</p>\n\nThe application doesn't perform any other processing of the data, so an attacker can easily send a message that attacks other users:\n\n<p><script>/* Bad stuff here... */</script></p>",
+    "field": "questions_to_ask",
+    "value": "In the simple message-board example, are submitted messages displayed without any other processing?",
+    "expected": "pass",
+    "derived_boundary": "operational_wrapper",
+    "rationale": "Faithfully operationalizes an explicitly example-scoped source statement: the simple message-board application performs no other processing of the submitted data."
+  },
+  {
+    "id": "derived-stored-xss-no-processing-generalized",
+    "semantic_class": "DERIVED_OPERATIONAL",
+    "source_modality": "descriptive",
+    "source": "Stored XSS (also known as persistent or second-order XSS) arises when an application receives data from an untrusted source and includes that data within its later HTTP responses in an unsafe way.\n\nThe data in question might be submitted to the application via HTTP requests; for example, comments on a blog post, user nicknames in a chat room, or contact details on a customer order. In other cases, the data might arrive from other untrusted sources; for example, a webmail application displaying messages received over SMTP, a marketing application displaying social media posts, or a network monitoring application displaying packet data from network traffic.\n\nHere is a simple example of a stored XSS vulnerability. A message board application lets users submit messages, which are displayed to other users:\n\n<p>Hello, this is my message!</p>\n\nThe application doesn't perform any other processing of the data, so an attacker can easily send a message that attacks other users:\n\n<p><script>/* Bad stuff here... */</script></p>",
+    "field": "evidence_required",
+    "value": "Confirm that Stored XSS data is always included in later HTTP responses without any other processing.",
+    "expected": "fail",
+    "derived_boundary": "factual_payload",
+    "rationale": "Generalizes the simple message-board example's no-other-processing property into a universal Stored XSS requirement and adds universal scope that the source does not establish."
+  },
+  {
     "id": "label_pass_taxonomy",
     "semantic_class": "SEMANTIC_LABEL",
     "source": "This section compares XSS, CSRF, and SQL injection.",
