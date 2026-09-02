@@ -323,6 +323,94 @@
     "rationale": "Introduces universal scope and makes an HTML-context requirement a general Stored XSS invariant, while the source's HTML context belongs only to its concrete message-board example."
   },
   {
+    "id": "derived-entailment-q-coreference",
+    "semantic_class": "DERIVED_OPERATIONAL",
+    "source_modality": "descriptive",
+    "source": "The application receives a value in the q parameter and later includes that value in an HTTP response.",
+    "field": "evidence_required",
+    "value": "Confirm that the later HTTP response includes the value previously received in the q parameter.",
+    "expected": "pass",
+    "derived_boundary": "operational_wrapper",
+    "rationale": "The candidate preserves the source's explicit coreference between the value received in q and the value later included in the HTTP response. No context, transformation, parser, mechanism, or implementation detail is added."
+  },
+  {
+    "id": "derived-completion-q-html-context",
+    "semantic_class": "DERIVED_OPERATIONAL",
+    "source_modality": "descriptive",
+    "source": "The application receives a value in the q parameter and later includes that value in an HTTP response.",
+    "field": "evidence_required",
+    "value": "Confirm that the later HTTP response places the q value in an HTML context.",
+    "expected": "fail",
+    "derived_boundary": "factual_payload",
+    "rationale": "The source establishes later inclusion in an HTTP response but does not establish an HTML context. HTML placement is a plausible domain completion, not an entailment of the supplied text."
+  },
+  {
+    "id": "derived-entailment-comment-visible",
+    "semantic_class": "DERIVED_OPERATIONAL",
+    "source_modality": "descriptive",
+    "source": "A user submits a comment, and the application later shows that comment to another user.",
+    "field": "questions_to_ask",
+    "value": "Determine whether another user is shown the comment that was submitted.",
+    "expected": "pass",
+    "derived_boundary": "operational_wrapper",
+    "rationale": "The candidate only operationalizes the explicitly stated relationship between the submitted comment and the comment later shown to another user."
+  },
+  {
+    "id": "derived-completion-comment-browser-html",
+    "semantic_class": "DERIVED_OPERATIONAL",
+    "source_modality": "descriptive",
+    "source": "A user submits a comment, and the application later shows that comment to another user.",
+    "field": "evidence_required",
+    "value": "Confirm that another user's browser renders the submitted comment as HTML.",
+    "expected": "fail",
+    "derived_boundary": "factual_payload",
+    "rationale": "The source states only that another user is shown the comment. It does not establish a browser, HTML rendering, or a parsing context."
+  },
+  {
+    "id": "derived-entailment-stored-nickname",
+    "semantic_class": "DERIVED_OPERATIONAL",
+    "source_modality": "descriptive",
+    "source": "The application stores a submitted nickname and later displays that nickname on a profile page.",
+    "field": "evidence_required",
+    "value": "Confirm that the nickname displayed on the profile page is the nickname the application previously stored.",
+    "expected": "pass",
+    "derived_boundary": "operational_wrapper",
+    "rationale": "The candidate preserves the source's direct identity/coreference between the stored nickname and the nickname later displayed. It adds no storage mechanism or transformation claim."
+  },
+  {
+    "id": "derived-completion-nickname-sql-storage",
+    "semantic_class": "DERIVED_OPERATIONAL",
+    "source_modality": "descriptive",
+    "source": "The application stores a submitted nickname and later displays that nickname on a profile page.",
+    "field": "evidence_required",
+    "value": "Confirm that the nickname is stored in a SQL database before it is displayed on the profile page.",
+    "expected": "fail",
+    "derived_boundary": "factual_payload",
+    "rationale": "The source establishes storage and later display but does not specify SQL, a database implementation, or any storage technology."
+  },
+  {
+    "id": "derived-entailment-literal-response",
+    "semantic_class": "DERIVED_OPERATIONAL",
+    "source_modality": "descriptive",
+    "source": "The HTTP response body is the exact string '<b>Hello</b>'.",
+    "field": "evidence_required",
+    "value": "Confirm that the HTTP response body contains the exact string '<b>Hello</b>'.",
+    "expected": "pass",
+    "derived_boundary": "operational_wrapper",
+    "rationale": "The candidate directly checks the exact response-body content stated by the source and introduces no interpretation or execution claim."
+  },
+  {
+    "id": "derived-completion-literal-response-browser",
+    "semantic_class": "DERIVED_OPERATIONAL",
+    "source_modality": "descriptive",
+    "source": "The HTTP response body is the exact string '<b>Hello</b>'.",
+    "field": "evidence_required",
+    "value": "Confirm that a browser interprets the response body as HTML.",
+    "expected": "fail",
+    "derived_boundary": "factual_payload",
+    "rationale": "The literal response-body string alone does not establish browser interpretation, response Content-Type, document context, or HTML parsing. Those are domain/implementation completions."
+  },
+  {
     "id": "label_pass_taxonomy",
     "semantic_class": "SEMANTIC_LABEL",
     "source": "This section compares XSS, CSRF, and SQL injection.",

@@ -25,12 +25,12 @@ def test_manual_semantics_matrix_has_required_class_balance() -> None:
         (str(case["semantic_class"]), str(case["expected"])) for case in measured
     )
 
-    assert len(measured) == 39
+    assert len(measured) == 47
     assert counts == {
         ("SOURCE_FACTUAL", "pass"): 3,
         ("SOURCE_FACTUAL", "fail"): 3,
-        ("DERIVED_OPERATIONAL", "pass"): 11,
-        ("DERIVED_OPERATIONAL", "fail"): 14,
+        ("DERIVED_OPERATIONAL", "pass"): 15,
+        ("DERIVED_OPERATIONAL", "fail"): 18,
         ("SEMANTIC_LABEL", "pass"): 2,
         ("SEMANTIC_LABEL", "fail"): 2,
         ("ROUTING_METADATA", "pass"): 2,
@@ -63,6 +63,14 @@ def test_semantics_fixture_covers_requested_boundary_examples() -> None:
         "derived-stored-xss-html-example-scoped": "pass",
         "derived-stored-xss-browser-inference-example-scoped": "fail",
         "derived-stored-xss-html-generalized": "fail",
+        "derived-entailment-q-coreference": "pass",
+        "derived-completion-q-html-context": "fail",
+        "derived-entailment-comment-visible": "pass",
+        "derived-completion-comment-browser-html": "fail",
+        "derived-entailment-stored-nickname": "pass",
+        "derived-completion-nickname-sql-storage": "fail",
+        "derived-entailment-literal-response": "pass",
+        "derived-completion-literal-response-browser": "fail",
         "derived_pass_persistence_question": "pass",
         "derived_fail_httponly_question": "fail",
         "label_pass_taxonomy": "pass",
@@ -234,6 +242,98 @@ def test_stored_xss_counterexamples_share_one_exact_source_and_atomic_boundaries
         "derived-stored-xss-html-generalized": (
             "evidence_required",
             "Confirm that every Stored XSS vulnerability requires persisted data to be included in an HTML context in a later HTTP response.",
+            "fail",
+            "factual_payload",
+        ),
+    }
+
+
+def test_entailment_holdout_pairs_share_sources_and_exact_atomic_boundaries() -> None:
+    cases = {str(case["id"]): case for case in load_cases()}
+    pairs = (
+        (
+            "derived-entailment-q-coreference",
+            "derived-completion-q-html-context",
+        ),
+        (
+            "derived-entailment-comment-visible",
+            "derived-completion-comment-browser-html",
+        ),
+        (
+            "derived-entailment-stored-nickname",
+            "derived-completion-nickname-sql-storage",
+        ),
+        (
+            "derived-entailment-literal-response",
+            "derived-completion-literal-response-browser",
+        ),
+    )
+
+    assert all(cases[left]["source"] == cases[right]["source"] for left, right in pairs)
+    assert {
+        case_id: (
+            cases[case_id]["source_modality"],
+            cases[case_id]["field"],
+            cases[case_id]["value"],
+            cases[case_id]["expected"],
+            cases[case_id]["derived_boundary"],
+        )
+        for pair in pairs
+        for case_id in pair
+    } == {
+        "derived-entailment-q-coreference": (
+            "descriptive",
+            "evidence_required",
+            "Confirm that the later HTTP response includes the value previously received in the q parameter.",
+            "pass",
+            "operational_wrapper",
+        ),
+        "derived-completion-q-html-context": (
+            "descriptive",
+            "evidence_required",
+            "Confirm that the later HTTP response places the q value in an HTML context.",
+            "fail",
+            "factual_payload",
+        ),
+        "derived-entailment-comment-visible": (
+            "descriptive",
+            "questions_to_ask",
+            "Determine whether another user is shown the comment that was submitted.",
+            "pass",
+            "operational_wrapper",
+        ),
+        "derived-completion-comment-browser-html": (
+            "descriptive",
+            "evidence_required",
+            "Confirm that another user's browser renders the submitted comment as HTML.",
+            "fail",
+            "factual_payload",
+        ),
+        "derived-entailment-stored-nickname": (
+            "descriptive",
+            "evidence_required",
+            "Confirm that the nickname displayed on the profile page is the nickname the application previously stored.",
+            "pass",
+            "operational_wrapper",
+        ),
+        "derived-completion-nickname-sql-storage": (
+            "descriptive",
+            "evidence_required",
+            "Confirm that the nickname is stored in a SQL database before it is displayed on the profile page.",
+            "fail",
+            "factual_payload",
+        ),
+        "derived-entailment-literal-response": (
+            "descriptive",
+            "evidence_required",
+            "Confirm that the HTTP response body contains the exact string '<b>Hello</b>'.",
+            "pass",
+            "operational_wrapper",
+        ),
+        "derived-completion-literal-response-browser": (
+            "descriptive",
+            "evidence_required",
+            "Confirm that a browser interprets the response body as HTML.",
             "fail",
             "factual_payload",
         ),
