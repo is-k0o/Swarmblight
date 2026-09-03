@@ -117,7 +117,16 @@ KNOWLEDGE_CARD_FIELD_SEMANTICS = """AUTHORITATIVE KNOWLEDGECARD FIELD CONTRACT:
   implemented or that nonconformance currently occurs. Identify payload and modality semantically,
   not by matching keywords. It must not add a mechanism, state, actor property, authentication or
   session qualifier, transport assumption, request/response path, implementation detail, causal
-  relationship, precondition, result, impact, guarantee, or stronger proof.
+  relationship, precondition, result, impact, guarantee, or stronger proof. For evidence_required,
+  source licensing and evidentiary sufficiency are separate. Identify P, the exact relevant
+  source-supported proposition or normative requirement to substantiate, and E, the factual
+  condition established if the requested evidence succeeds after ordinary operational verbs are
+  ignored. E must be source-licensed and sufficient to substantiate P. Ask whether E could be true
+  while P is false. If yes because E drops a semantically necessary condition, qualifier, scope,
+  modality, relationship, identity requirement, conjunction member, exactness requirement, or
+  other claim-defining constraint, the item is unsupported under the field's evidence-sufficiency
+  semantics. Do not require lexical identity or mathematical equivalence when an observable
+  condition genuinely establishes P, and do not demand evidence stronger than the source.
 - SEMANTIC_LABEL — subtopic, title, and tags categorize source content. Literal source vocabulary
   is not required, but each label must be semantically representative and must not imply an absent
   concept.
@@ -170,7 +179,12 @@ demonstrate, compare, or capture without those verbs themselves requiring source
 to be established must remain supported: introduce no new mechanism, demand no stronger proof than
 the card and source claim, and avoid mutually inappropriate alternative outcomes. When the source
 distinguishes input or reflection from execution, preserve that distinction instead of treating
-reflection as demonstrated execution.
+reflection as demonstrated execution. Before emitting an evidence_required item, identify the
+relevant source-supported proposition P and the factual condition E that successful evidence would
+establish. E must be both source-licensed and sufficient: if E could be true while P is false
+because E omits a claim-defining constraint, do not emit the item. Concrete assessment evidence may
+instantiate P without using identical wording or being mathematically equivalent, but it must
+genuinely establish P and must not demand stronger proof than the source.
 
 speculative_extensions is the only field allowed to contain bounded extrapolation. Each such item
 must be an explicitly speculative, reasonable consequence of supported source material; it must
@@ -227,7 +241,13 @@ behavior in a concrete assessment. The chunk need not literally prescribe a ques
 test, observation verb, or proof artifact. The evidence remains invalid if the fact it demands
 introduces a new mechanism, requires stronger evidence than the card/source claims, contains
 mutually inappropriate alternative outcomes, or collapses a source distinction between input or
-reflection and demonstrated execution.
+reflection and demonstrated execution. Review source licensing and evidentiary sufficiency
+separately: identify the relevant source-supported proposition P and the factual condition E that
+successful evidence would establish after ordinary operational framing is removed. REVISE or
+REJECT if E could be true while P is false because E omits a semantically necessary,
+claim-defining constraint. Do not require identical wording or mathematical equivalence when a
+concrete observable condition genuinely establishes P, and do not require proof stronger than the
+source.
 
 Also check reusable methodology, lab-specific instructions, duplicate concepts, false-positive
 risk, controllability-versus-exploitability confusion, evidence requirements, verbosity, and
@@ -264,8 +284,21 @@ source-supported concept? CHECK 2 — FACTUAL PAYLOAD AND MODALITY: identify the
 and whether the source is descriptive or normative. Mentally remove that framing only to compare
 payloads; do not reinterpret a prescription as an unconditional descriptive assertion. A check
 whether the relevant implementation conforms to a source prescription does not assert that the
-prescribed behavior is already implemented. PASS the item only if both checks succeed. If the
+prescribed behavior is already implemented. PASS a non-evidence DERIVED_OPERATIONAL item only if
+both checks succeed; an evidence_required item must also pass the sufficiency check below. If the
 payload introduces unsupported factual specificity or changes modality, FAIL.
+
+For evidence_required add CHECK 3 — EVIDENTIARY SUFFICIENCY. Identify P, the exact relevant
+source-supported proposition or normative requirement the item is meant to substantiate, and E,
+the factual condition established if the requested evidence succeeds after ordinary operational
+verbs are ignored. E must be source-licensed and must substantiate P. Ask whether E could be true
+while P is false. If yes because E drops a semantically necessary condition, qualifier, scope,
+modality, relationship, identity requirement, conjunction member, exactness requirement, or other
+claim-defining constraint, FAIL. Do not require lexical identity, mathematical equivalence, or
+evidence stronger than the source when a concrete observable condition genuinely establishes P.
+When insufficiency alone invalidates the item, classify it as unsupported and explain that it is
+unsupported under evidence-sufficiency semantics. Use stronger_than_source only if the item also
+independently contains a stronger-than-source claim.
 
 FAIL any added mechanism, condition, workflow, assumption, proof standard, or causal claim. Useful
 advice that imports new domain knowledge also fails. evidence_required must not import a standard

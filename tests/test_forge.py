@@ -601,6 +601,51 @@ def test_prompts_define_source_bounded_evidence_required() -> None:
         assert "demonstrated execution" in normalized
 
 
+def test_evidence_required_contract_requires_source_license_and_sufficiency() -> None:
+    shared = " ".join(KNOWLEDGE_CARD_FIELD_SEMANTICS.casefold().split())
+    generator = " ".join(GENERATOR_PROMPT.casefold().split())
+    critic = " ".join(CRITIC_PROMPT.casefold().split())
+    gate = " ".join(SOURCE_FIDELITY_PROMPT.casefold().split())
+
+    assert "source licensing and evidentiary sufficiency are separate" in shared
+    assert "identify p, the exact relevant source-supported proposition" in shared
+    assert "e, the factual condition established if the requested evidence succeeds" in shared
+    assert "e must be source-licensed and sufficient to substantiate p" in shared
+    assert "ask whether e could be true while p is false" in shared
+    for omitted_constraint in (
+        "semantically necessary condition",
+        "qualifier",
+        "scope",
+        "modality",
+        "relationship",
+        "identity requirement",
+        "conjunction member",
+        "exactness requirement",
+        "claim-defining constraint",
+    ):
+        assert omitted_constraint in shared
+    assert "unsupported under the field's evidence-sufficiency semantics" in shared
+    assert "do not require lexical identity or mathematical equivalence" in shared
+    assert "do not demand evidence stronger than the source" in shared
+
+    assert "before emitting an evidence_required item" in generator
+    assert "e must be both source-licensed and sufficient" in generator
+    assert "do not emit the item" in generator
+    assert "review source licensing and evidentiary sufficiency separately" in critic
+    assert "revise or reject if e could be true while p is false" in critic
+    assert "check 3 — evidentiary sufficiency" in gate
+    assert "an evidence_required item must also pass the sufficiency check" in gate
+    assert "classify it as unsupported" in gate
+    assert "unsupported under evidence-sufficiency semantics" in gate
+    assert "use stronger_than_source only if" in gate
+
+    for prompt in (GENERATOR_PROMPT, CRITIC_PROMPT, SOURCE_FIDELITY_PROMPT):
+        normalized = prompt.casefold()
+        assert "derived-entailment" not in normalized
+        assert "<b>hello</b>" not in normalized
+        assert "equality-versus-containment" not in normalized
+
+
 def test_authoritative_field_semantics_classifies_every_knowledge_card_field() -> None:
     assert set(KNOWLEDGE_CARD_FIELD_SEMANTIC_CLASSES) == set(KnowledgeCard.model_fields)
     assert KNOWLEDGE_CARD_FIELD_SEMANTIC_CLASSES["evidence_required"] == (
@@ -648,7 +693,8 @@ def test_derived_operational_contract_separates_wrapper_from_factual_payload() -
     assert "check 2 — factual payload and modality" in gate
     assert "do not reinterpret a prescription as an unconditional descriptive assertion" in gate
     assert "does not assert that the prescribed behavior is already implemented" in gate
-    assert "pass the item only if both checks succeed" in gate
+    assert "pass a non-evidence derived_operational item only if both checks succeed" in gate
+    assert "an evidence_required item must also pass the sufficiency check" in gate
 
     assert "revise or reject when its payload" not in generator
     assert "pass the item only if both checks succeed" not in critic
@@ -662,7 +708,8 @@ def test_modality_preservation_is_shared_but_role_behavior_stays_distinct() -> N
     assert "may be operationalized by checking" in generator
     assert "revise or reject" not in generator
     assert "revise or reject" in critic
-    assert "pass the item only if both checks succeed" in gate
+    assert "pass a non-evidence derived_operational item only if both checks succeed" in gate
+    assert "an evidence_required item must also pass the sufficiency check" in gate
     assert "do not repair, rewrite, or improve the card" in gate
 
 

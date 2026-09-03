@@ -186,7 +186,9 @@ def test_fidelity_prompt_is_narrow_adversarial_and_non_rewriting() -> None:
     assert "check 2 — factual payload" in normalized
     assert "mentally remove that framing only to compare payloads" in normalized
     assert "do not reinterpret a prescription as an unconditional descriptive assertion" in normalized
-    assert "pass the item only if both checks succeed" in normalized
+    assert "an evidence_required item must also pass the sufficiency check" in normalized
+    assert "check 3 — evidentiary sufficiency" in normalized
+    assert "classify it as unsupported" in normalized
     assert "semantic relevance or adjacency, not literal wording" in normalized
     assert "subtopic, title, tags, triggers" in normalized
     assert "confidence is forge metadata and is excluded" in normalized
