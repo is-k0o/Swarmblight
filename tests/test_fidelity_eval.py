@@ -17,6 +17,7 @@ from forge import (
     SourceFidelityGateResult,
     _build_atomic_fidelity_artifacts,
     _build_parser,
+    _complete_source_scaffold,
     _get_fidelity_evaluation_case,
     _load_fidelity_evaluation_cases,
     _preflight_fidelity_evaluation_cases,
@@ -157,7 +158,7 @@ def incomplete(*, retryable: bool = True) -> IncompleteLLMResponse:
 def test_fixture_loader_normalizes_authoritative_fixture_and_calibration_pairs() -> None:
     cases = _load_fidelity_evaluation_cases()
 
-    assert len(cases) == 49
+    assert len(cases) == 50
     for case_id, (source, field, value, expected) in CALIBRATION_CASES.items():
         case = cases[case_id]
         assert case.case_id == case_id
@@ -250,7 +251,9 @@ def test_non_target_fields_add_no_unrelated_semantic_claims() -> None:
 
     assert card.title == case.source_text
     assert card.principle == case.source_text
-    assert case.source_text.startswith(card.subtopic)
+    assert card.subtopic == "general"
+    assert document.title == case.source_text
+    assert chunk.heading == "general"
     assert card.tags == []
     assert card.triggers == []
     assert card.questions_to_ask == []
@@ -261,6 +264,79 @@ def test_non_target_fields_add_no_unrelated_semantic_claims() -> None:
     assert card.demonstrated_behavior == ""
     assert card.speculative_extensions == []
     assert document.content == chunk.content == case.source_text
+
+
+def test_complete_source_scaffold_uses_only_complete_supported_units() -> None:
+    short_source = "A short source sentence."
+    assert _complete_source_scaffold(short_source, 160) == short_source
+
+    longer_than_subtopic = (
+        "A submitted value is stored. "
+        "The application later includes that value in a deliberately long response."
+    )
+    assert len(longer_than_subtopic) > 80
+    assert _complete_source_scaffold(longer_than_subtopic, 80) == (
+        "A submitted value is stored."
+    )
+
+    stored_xss = _get_fidelity_evaluation_case(
+        "derived-stored-xss-later-response-faithful"
+    ).source_text
+    stored_xss_scaffold = _complete_source_scaffold(stored_xss, 160)
+    assert stored_xss_scaffold in stored_xss
+    assert len(stored_xss_scaffold) <= 160
+    assert stored_xss_scaffold.endswith((".", "!", "?", ";"))
+
+    clause_source = (
+        "The value is stored; the application later returns it in a response "
+        "with additional deliberately lengthy context."
+    )
+    assert _complete_source_scaffold(clause_source, 25) == "The value is stored;"
+    assert _complete_source_scaffold("x" * 200, 80) == "general"
+
+
+@pytest.mark.parametrize(
+    "case_id",
+    [
+        "derived-entailment-comment-visible",
+        "derived-completion-comment-browser-html",
+    ],
+)
+def test_comment_holdout_neutral_scaffolding_never_repeats_truncated_claim(
+    case_id: str,
+) -> None:
+    case = _get_fidelity_evaluation_case(case_id)
+    card, document, chunk = _build_atomic_fidelity_artifacts(case)
+    old_truncated_claim = (
+        "A user submits a comment, and the application later shows that comment to"
+    )
+
+    assert old_truncated_claim not in {
+        card.subtopic,
+        card.title,
+        card.principle,
+        document.title,
+        chunk.heading,
+    }
+    assert card.subtopic == chunk.heading == "general"
+    assert card.title == card.principle == document.title == case.source_text
+
+
+def test_all_constructible_atomic_fixtures_preserve_source_and_exact_target() -> None:
+    cases = _load_fidelity_evaluation_cases()
+
+    for case in cases.values():
+        if case.expected_verdict == "excluded":
+            continue
+        card, document, chunk = _build_atomic_fidelity_artifacts(case)
+        assert document.content == chunk.content == case.source_text
+        target = getattr(card, case.target_field)
+        expected_target = (
+            case.candidate_value
+            if not isinstance(target, list) or isinstance(case.candidate_value, list)
+            else [case.candidate_value]
+        )
+        assert target == expected_target
 
 
 @pytest.mark.parametrize(
@@ -287,9 +363,9 @@ def test_long_stored_xss_source_remains_exact_with_neutral_bounded_card_fields(
     card, document, chunk = _build_atomic_fidelity_artifacts(case)
 
     assert document.content == chunk.content == case.source_text
-    assert case.source_text.startswith(card.subtopic)
-    assert case.source_text.startswith(card.title)
-    assert case.source_text.startswith(card.principle)
+    assert card.subtopic == "general"
+    assert card.title == "general" or card.title in case.source_text
+    assert card.principle == "general" or card.principle in case.source_text
     assert len(card.subtopic) <= 80
     assert len(card.title) <= 160
     assert len(card.principle) <= 800

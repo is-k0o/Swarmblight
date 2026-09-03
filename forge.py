@@ -1243,15 +1243,26 @@ def _preflight_fidelity_evaluation_cases(
     return cases
 
 
-def _source_prefix(source_text: str, max_length: int) -> str:
-    """Return a verbatim source prefix suitable for a bounded label field."""
+def _complete_source_scaffold(source_text: str, max_length: int) -> str:
+    """Return a complete source unit for fidelity-eval-only neutral scaffolding."""
 
-    if len(source_text) <= max_length:
-        return source_text
-    prefix = source_text[:max_length]
-    if " " in prefix:
-        prefix = prefix.rsplit(" ", 1)[0]
-    return prefix.rstrip()
+    neutral = "general"
+    source = source_text.strip()
+    if len(source) <= max_length:
+        return source
+
+    sentence_start = 0
+    for boundary in re.finditer(r"[.!?](?:[\"')\]}]+)?(?=\s|$)", source):
+        sentence = source[sentence_start : boundary.end()].strip()
+        if sentence and len(sentence) <= max_length:
+            return sentence
+        first_clause_end = sentence.find(";")
+        if first_clause_end >= 0:
+            first_clause = sentence[: first_clause_end + 1].strip()
+            if first_clause and len(first_clause) <= max_length:
+                return first_clause
+        sentence_start = boundary.end()
+    return neutral
 
 
 def _build_atomic_fidelity_artifacts(
@@ -1271,13 +1282,13 @@ def _build_atomic_fidelity_artifacts(
     )
     chunk_id = uuid5(document_id, "exact-fixture-source")
     card_id = uuid5(document_id, "atomic-synthetic-card")
-    source_label = _source_prefix(case.source_text, 80)
-    source_title = _source_prefix(case.source_text, 160)
-    source_principle = _source_prefix(case.source_text, 800)
+    neutral_label = "general"
+    source_title = _complete_source_scaffold(case.source_text, 160)
+    source_principle = _complete_source_scaffold(case.source_text, 800)
     source_reference = "atomic-fidelity-fixture"
     document = SourceDocument(
         id=document_id,
-        title=_source_prefix(case.source_text, 300),
+        title=_complete_source_scaffold(case.source_text, 300),
         source_type=KnowledgeSourceType.MANUAL,
         source_reference=source_reference,
         content=case.source_text,
@@ -1287,7 +1298,7 @@ def _build_atomic_fidelity_artifacts(
     chunk = SourceChunk(
         id=chunk_id,
         document_id=document.id,
-        heading=source_label,
+        heading=neutral_label,
         content=case.source_text,
         sequence=0,
         source_reference=source_reference,
@@ -1297,7 +1308,7 @@ def _build_atomic_fidelity_artifacts(
         "id": card_id,
         "agent": AgentName.IKIT,
         "topic": KnowledgeTopic.XSS,
-        "subtopic": source_label,
+        "subtopic": neutral_label,
         "title": source_title,
         "tags": [],
         "triggers": [],

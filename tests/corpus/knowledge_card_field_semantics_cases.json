@@ -395,9 +395,20 @@
     "source": "The HTTP response body is the exact string '<b>Hello</b>'.",
     "field": "evidence_required",
     "value": "Confirm that the HTTP response body contains the exact string '<b>Hello</b>'.",
+    "expected": "fail",
+    "derived_boundary": "factual_payload",
+    "rationale": "The source asserts equality of the whole response body with the exact string. The evidence item checks only containment of that string, which permits additional response-body content. Although equality entails containment, this weaker observation does not substantiate the source-supported equality proposition and therefore does not faithfully preserve the evidence payload."
+  },
+  {
+    "id": "derived-entailment-literal-response-exact-equality",
+    "semantic_class": "DERIVED_OPERATIONAL",
+    "source_modality": "descriptive",
+    "source": "The HTTP response body is the exact string '<b>Hello</b>'.",
+    "field": "evidence_required",
+    "value": "Confirm that the HTTP response body is exactly the string '<b>Hello</b>'.",
     "expected": "pass",
     "derived_boundary": "operational_wrapper",
-    "rationale": "The candidate directly checks the exact response-body content stated by the source and introduces no interpretation or execution claim."
+    "rationale": "The evidence item directly checks the exact whole-body equality stated by the source and adds no parser, browser, content-type, implementation, transformation, mechanism, scope, or modality claim."
   },
   {
     "id": "derived-completion-literal-response-browser",
