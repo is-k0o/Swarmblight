@@ -158,7 +158,7 @@ def incomplete(*, retryable: bool = True) -> IncompleteLLMResponse:
 def test_fixture_loader_normalizes_authoritative_fixture_and_calibration_pairs() -> None:
     cases = _load_fidelity_evaluation_cases()
 
-    assert len(cases) == 50
+    assert len(cases) == 56
     for case_id, (source, field, value, expected) in CALIBRATION_CASES.items():
         case = cases[case_id]
         assert case.case_id == case_id

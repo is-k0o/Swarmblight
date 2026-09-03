@@ -25,12 +25,12 @@ def test_manual_semantics_matrix_has_required_class_balance() -> None:
         (str(case["semantic_class"]), str(case["expected"])) for case in measured
     )
 
-    assert len(measured) == 48
+    assert len(measured) == 54
     assert counts == {
         ("SOURCE_FACTUAL", "pass"): 3,
         ("SOURCE_FACTUAL", "fail"): 3,
-        ("DERIVED_OPERATIONAL", "pass"): 15,
-        ("DERIVED_OPERATIONAL", "fail"): 19,
+        ("DERIVED_OPERATIONAL", "pass"): 18,
+        ("DERIVED_OPERATIONAL", "fail"): 22,
         ("SEMANTIC_LABEL", "pass"): 2,
         ("SEMANTIC_LABEL", "fail"): 2,
         ("ROUTING_METADATA", "pass"): 2,
@@ -72,6 +72,12 @@ def test_semantics_fixture_covers_requested_boundary_examples() -> None:
         "derived-entailment-literal-response": "fail",
         "derived-entailment-literal-response-exact-equality": "pass",
         "derived-completion-literal-response-browser": "fail",
+        "derived-sufficiency-conjunction-complete": "pass",
+        "derived-sufficiency-conjunction-partial": "fail",
+        "derived-sufficiency-quantifier-complete": "pass",
+        "derived-sufficiency-quantifier-partial": "fail",
+        "derived-sufficiency-order-complete": "pass",
+        "derived-sufficiency-order-dropped": "fail",
         "derived_pass_persistence_question": "pass",
         "derived_fail_httponly_question": "fail",
         "label_pass_taxonomy": "pass",
@@ -353,6 +359,113 @@ def test_entailment_holdout_groups_share_sources_and_exact_atomic_boundaries() -
             "factual_payload",
         ),
     }
+
+
+def test_evidence_sufficiency_holdout_pairs_are_exact_and_atomic() -> None:
+    cases = {str(case["id"]): case for case in load_cases()}
+    pairs = {
+        "conjunction": (
+            "derived-sufficiency-conjunction-complete",
+            "derived-sufficiency-conjunction-partial",
+            "The application validates both the username and the account identifier before accepting the request.",
+        ),
+        "quantifier": (
+            "derived-sufficiency-quantifier-complete",
+            "derived-sufficiency-quantifier-partial",
+            "During the observed test, the application received three requests with invalid signatures, and all three were rejected.",
+        ),
+        "ordering": (
+            "derived-sufficiency-order-complete",
+            "derived-sufficiency-order-dropped",
+            "The application performs the authorization check before performing the state-changing action.",
+        ),
+    }
+
+    for positive_id, negative_id, source in pairs.values():
+        assert cases[positive_id]["source"] == source
+        assert cases[negative_id]["source"] == source
+
+    assert {
+        case_id: (
+            cases[case_id]["source_modality"],
+            cases[case_id]["field"],
+            cases[case_id]["value"],
+            cases[case_id]["expected"],
+            cases[case_id]["derived_boundary"],
+        )
+        for positive_id, negative_id, _ in pairs.values()
+        for case_id in (positive_id, negative_id)
+    } == {
+        "derived-sufficiency-conjunction-complete": (
+            "descriptive",
+            "evidence_required",
+            "Confirm that the application validates both the username and the account identifier before accepting the request.",
+            "pass",
+            "operational_wrapper",
+        ),
+        "derived-sufficiency-conjunction-partial": (
+            "descriptive",
+            "evidence_required",
+            "Confirm that the application validates the username before accepting the request.",
+            "fail",
+            "factual_payload",
+        ),
+        "derived-sufficiency-quantifier-complete": (
+            "descriptive",
+            "evidence_required",
+            "Confirm that all three requests with invalid signatures were rejected.",
+            "pass",
+            "operational_wrapper",
+        ),
+        "derived-sufficiency-quantifier-partial": (
+            "descriptive",
+            "evidence_required",
+            "Confirm that at least one of the three requests with an invalid signature was rejected.",
+            "fail",
+            "factual_payload",
+        ),
+        "derived-sufficiency-order-complete": (
+            "descriptive",
+            "evidence_required",
+            "Confirm that the application performs the authorization check before performing the state-changing action.",
+            "pass",
+            "operational_wrapper",
+        ),
+        "derived-sufficiency-order-dropped": (
+            "descriptive",
+            "evidence_required",
+            "Confirm that the application performs the authorization check and the state-changing action.",
+            "fail",
+            "factual_payload",
+        ),
+    }
+
+    conjunction_complete = str(cases[pairs["conjunction"][0]]["value"])
+    conjunction_partial = str(cases[pairs["conjunction"][1]]["value"])
+    assert "both the username and the account identifier" in conjunction_complete
+    assert "account identifier" not in conjunction_partial
+    assert conjunction_complete.replace(
+        "both the username and the account identifier",
+        "the username",
+    ) == conjunction_partial
+
+    quantifier_complete = str(cases[pairs["quantifier"][0]]["value"])
+    quantifier_partial = str(cases[pairs["quantifier"][1]]["value"])
+    assert "all three" in quantifier_complete
+    assert "at least one of the three" in quantifier_partial
+    assert quantifier_complete.replace(
+        "all three requests with invalid signatures were",
+        "at least one of the three requests with an invalid signature was",
+    ) == quantifier_partial
+
+    ordering_complete = str(cases[pairs["ordering"][0]]["value"])
+    ordering_dropped = str(cases[pairs["ordering"][1]]["value"])
+    for event in ("authorization check", "state-changing action"):
+        assert event in ordering_complete
+        assert event in ordering_dropped
+    assert "before" in ordering_complete
+    assert "before" not in ordering_dropped
+    assert ordering_complete.replace(" before performing ", " and ") == ordering_dropped
 
 
 def test_fixture_fields_follow_the_authoritative_semantic_classes() -> None:

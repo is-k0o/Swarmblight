@@ -422,6 +422,72 @@
     "rationale": "The literal response-body string alone does not establish browser interpretation, response Content-Type, document context, or HTML parsing. Those are domain/implementation completions."
   },
   {
+    "id": "derived-sufficiency-conjunction-complete",
+    "semantic_class": "DERIVED_OPERATIONAL",
+    "source_modality": "descriptive",
+    "source": "The application validates both the username and the account identifier before accepting the request.",
+    "field": "evidence_required",
+    "value": "Confirm that the application validates both the username and the account identifier before accepting the request.",
+    "expected": "pass",
+    "derived_boundary": "operational_wrapper",
+    "rationale": "The evidence preserves the complete conjunction and the timing relation stated by the source, so satisfying the evidence substantiates the full source proposition."
+  },
+  {
+    "id": "derived-sufficiency-conjunction-partial",
+    "semantic_class": "DERIVED_OPERATIONAL",
+    "source_modality": "descriptive",
+    "source": "The application validates both the username and the account identifier before accepting the request.",
+    "field": "evidence_required",
+    "value": "Confirm that the application validates the username before accepting the request.",
+    "expected": "fail",
+    "derived_boundary": "factual_payload",
+    "rationale": "The evidence condition is source-supported but drops validation of the account identifier. It can therefore be true while the full source proposition is false, making the evidence insufficient."
+  },
+  {
+    "id": "derived-sufficiency-quantifier-complete",
+    "semantic_class": "DERIVED_OPERATIONAL",
+    "source_modality": "descriptive",
+    "source": "During the observed test, the application received three requests with invalid signatures, and all three were rejected.",
+    "field": "evidence_required",
+    "value": "Confirm that all three requests with invalid signatures were rejected.",
+    "expected": "pass",
+    "derived_boundary": "operational_wrapper",
+    "rationale": "The evidence preserves the finite universal claim stated by the source and therefore substantiates the complete observed proposition."
+  },
+  {
+    "id": "derived-sufficiency-quantifier-partial",
+    "semantic_class": "DERIVED_OPERATIONAL",
+    "source_modality": "descriptive",
+    "source": "During the observed test, the application received three requests with invalid signatures, and all three were rejected.",
+    "field": "evidence_required",
+    "value": "Confirm that at least one of the three requests with an invalid signature was rejected.",
+    "expected": "fail",
+    "derived_boundary": "factual_payload",
+    "rationale": "The evidence condition is directly supported by the source but proves only one rejection. It can be satisfied while one or two of the remaining invalid-signature requests are not rejected, so it is insufficient to substantiate the all-three claim."
+  },
+  {
+    "id": "derived-sufficiency-order-complete",
+    "semantic_class": "DERIVED_OPERATIONAL",
+    "source_modality": "descriptive",
+    "source": "The application performs the authorization check before performing the state-changing action.",
+    "field": "evidence_required",
+    "value": "Confirm that the application performs the authorization check before performing the state-changing action.",
+    "expected": "pass",
+    "derived_boundary": "operational_wrapper",
+    "rationale": "The evidence preserves both events and their source-stated temporal ordering, so successful evidence substantiates the complete proposition."
+  },
+  {
+    "id": "derived-sufficiency-order-dropped",
+    "semantic_class": "DERIVED_OPERATIONAL",
+    "source_modality": "descriptive",
+    "source": "The application performs the authorization check before performing the state-changing action.",
+    "field": "evidence_required",
+    "value": "Confirm that the application performs the authorization check and the state-changing action.",
+    "expected": "fail",
+    "derived_boundary": "factual_payload",
+    "rationale": "The evidence condition is source-supported but drops the before relation. Both events could occur while the state-changing action occurs first, so the evidence can be true while the source proposition is false."
+  },
+  {
     "id": "label_pass_taxonomy",
     "semantic_class": "SEMANTIC_LABEL",
     "source": "This section compares XSS, CSRF, and SQL injection.",
