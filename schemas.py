@@ -395,6 +395,71 @@ class SourceFidelityReview(KnowledgeSchema):
         return self.review.issues
 
 
+class SourceFidelityItemIssue(SourceFidelityIssue):
+    """An issue owned by one explicit target field/item, with no rewrite slot."""
+
+    index: int = Field(ge=0, strict=True)
+
+
+class PassSourceFidelityItemReview(KnowledgeSchema):
+    index: int = Field(ge=0, strict=True)
+    decision: Literal[SourceFidelityDecision.PASS]
+    issues: list[SourceFidelityItemIssue] = Field(max_length=0)
+
+
+class FailSourceFidelityItemReview(KnowledgeSchema):
+    index: int = Field(ge=0, strict=True)
+    decision: Literal[SourceFidelityDecision.FAIL]
+    issues: list[SourceFidelityItemIssue] = Field(min_length=1, max_length=4)
+
+
+SourceFidelityItemReview = PassSourceFidelityItemReview | FailSourceFidelityItemReview
+
+
+class SourceFidelityFieldReview(KnowledgeSchema):
+    """One non-empty field; exact target coverage is validated by the application."""
+
+    field: SourceFidelityField
+    item_reviews: list[SourceFidelityItemReview] = Field(min_length=1, max_length=12)
+
+
+class SourceFidelityCrossFieldIssue(KnowledgeSchema):
+    fields: list[SourceFidelityField] = Field(min_length=2, max_length=12)
+    classification: SourceFidelityClassification
+    reason: str = Field(min_length=1, max_length=300)
+
+    @field_validator("fields")
+    @classmethod
+    def fields_must_be_distinct(cls, fields: list[SourceFidelityField]) -> list[SourceFidelityField]:
+        if len(set(fields)) != len(fields):
+            raise ValueError("cross-field issues must name distinct fields")
+        return fields
+
+
+class PassSourceFidelityCrossFieldReview(KnowledgeSchema):
+    decision: Literal[SourceFidelityDecision.PASS]
+    issues: list[SourceFidelityCrossFieldIssue] = Field(max_length=0)
+
+
+class FailSourceFidelityCrossFieldReview(KnowledgeSchema):
+    decision: Literal[SourceFidelityDecision.FAIL]
+    issues: list[SourceFidelityCrossFieldIssue] = Field(min_length=1, max_length=8)
+
+
+class SourceFidelityCrossFieldReview(KnowledgeSchema):
+    """Provider-compatible root wrapping relationship-only PASS/FAIL variants."""
+
+    review: PassSourceFidelityCrossFieldReview | FailSourceFidelityCrossFieldReview
+
+    @property
+    def decision(self) -> SourceFidelityDecision:
+        return SourceFidelityDecision(self.review.decision)
+
+    @property
+    def issues(self) -> list[SourceFidelityCrossFieldIssue]:
+        return self.review.issues
+
+
 DEFAULT_CASCADE_QUESTIONS = [
     "How could similar behavior be detected elsewhere?",
     "Could the underlying cause enable a different attack class?",
